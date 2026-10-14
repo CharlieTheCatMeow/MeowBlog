@@ -7,8 +7,7 @@ export async function initAuth() {
     const client = mongooseInstance.connection.getClient();
     const instance = betterAuth({
         database: mongodbAdapter(client.db()),
-        emailAndPassword: { enabled: true },
+        emailAndPassword: {enabled: true},
     });
-
     return instance;
 }
