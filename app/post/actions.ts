@@ -16,7 +16,7 @@ export interface PostType {
 async function requireUser() {
     const auth = await initAuth();
     const session = await auth.api.getSession({ headers: await headers() });
-    if (!session) {
+    if (!session || session.user.email !== process.env.ADMIN_EMAIL) {
         throw new Error("No.");
     }
     return session.user;
@@ -26,7 +26,7 @@ export async function postBlog(post: PostType) {
     const user = await requireUser();
     try {
         await dbConnect();
-        await Post.create({ ...post, autherId: user.id });
+        await Post.create({ ...post, authorId: user.id });
     } catch (error) {
         console.error("Error: " + error);
     }
