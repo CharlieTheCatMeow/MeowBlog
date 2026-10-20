@@ -18,6 +18,7 @@ async function BlogPost({params}: { params: Promise<{ id: string }> }) {
         title: doc.title,
         date: doc.date,
         content: [...doc.content],
+        likes: [...(doc.likes ?? [])],
     }
 
     return <Post post={post} />;

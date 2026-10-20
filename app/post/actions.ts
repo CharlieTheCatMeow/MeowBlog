@@ -11,6 +11,7 @@ export interface PostType {
     date: Date;
     title: string;
     content: string[];
+    likes?: string[];
 }
 
 async function requireUser() {
@@ -68,4 +69,31 @@ export async function deleteBlog(id: string) {
     } catch (error) {
         console.error("Error: " + error);
     }
+}
+
+export async function likePost(postId: string) {
+    const auth = await initAuth();
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session) {
+        throw new Error("No. (Log in vro)");
+    }
+
+    const userId = session.user.id;
+    await dbConnect();
+
+    const post = await Post.findOne({ id: postId });
+    if (!post) return false;
+
+    const likedAlready = post.likes?.includes(userId);
+
+    await Post.updateOne(
+        { id: postId },
+        likedAlready
+            ? { $pull: { likes: userId } }
+            : { $addToSet: { likes: userId } }
+    );
+
+    revalidatePath("/blogs");
+    revalidatePath(`/blogs/${postId}`)
+    return true;
 }

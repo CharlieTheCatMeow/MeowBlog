@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { deleteBlog, editBlog, type PostType } from "@/app/post/actions";
+import {deleteBlog, editBlog, likePost, type PostType} from "@/app/post/actions";
 
 const buttonStyle = "text-zinc-900 font-bold text-2xl m-2 px-6 py-2 rounded-full transition-all duration-300 bg-white/5 hover:bg-black/10 hover:text-white hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] cursor-pointer";
 
@@ -15,6 +15,9 @@ function Post({ post }: { post: PostType }) {
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
+
+    const likes = post.likes ?? [];
+    const hasLiked = session ? likes.includes(session.user.id) : false;
 
     async function handleEdit() {
         const ok = await editBlog(post.id, { title, content });
@@ -33,6 +36,15 @@ function Post({ post }: { post: PostType }) {
         } else {
             alert("Error deleting blog post");
         }
+    }
+
+    async function handleLike() {
+        if (!session) {
+            router.push("/signin");
+            return;
+        }
+        await likePost(post.id);
+        router.refresh();
     }
 
     return (
@@ -71,9 +83,15 @@ function Post({ post }: { post: PostType }) {
                 </>
             )}
 
-            {isAdmin && (
-                <div className="flex flex-row gap-2 mt-auto self-start">
-                    {isEditing ? (
+            <div className="flex flex-row gap-2 mt-auto self-start">
+                <button
+                    onClick={handleLike}
+                    className={`${buttonStyle} ${hasLiked ? "text-pink-400 border-pink-400/40" : ""}`}
+                >
+                    ♥ {likes.length}
+                </button>
+                {isAdmin && (
+                    isEditing ? (
                         <>
                             <button className={buttonStyle} onClick={handleEdit}>
                                 Save
@@ -91,9 +109,9 @@ function Post({ post }: { post: PostType }) {
                                 Delete
                             </button>
                         </>
-                    )}
-                </div>
-            )}
+                    )
+                )}
+            </div>
         </div>
     );
 }
