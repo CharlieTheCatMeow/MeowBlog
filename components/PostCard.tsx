@@ -2,7 +2,10 @@ import { PostType } from "@/app/post/actions";
 import Link from "next/link";
 
 function PostCard({ post }: {post: PostType}) {
-    const preview = post.content[0]?.slice(0, 120) ?? "";
+    const rawText = (post.content[0] ?? "")
+        .replace(/[#*_~`>]/g, "")
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+    const preview = rawText.slice(0, 120);
     const dateText = new Date(post.date).toLocaleDateString("en-GB", {
         day: "numeric",
         month: "long",

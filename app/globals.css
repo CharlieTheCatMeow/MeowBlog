@@ -1,7 +1,22 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 :root {
+    --background: #eef1ff;
+    --foreground: #1b1b2f;
+    --overlay: rgba(0, 0, 0, 0);
+    --bg-image: url("/Nature.png");
     color-scheme: light;
+}
+
+[data-theme="dark"] {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --overlay: rgba(0, 0, 0, 0);
+    --bg-image: url("/Nature_Night.png");
+    color-scheme: dark;
 }
 
 *,
@@ -17,21 +32,14 @@
     --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
-}
-
 body {
     margin: 0;
     min-height: 100vh;
     font-family: system-ui, sans-serif;
     line-height: 1.6;
-    color: #1b1b2f;
+    color: var(--foreground);
 
-    background: url("/Nature.png");
+    background: linear-gradient(var(--overlay), var(--overlay)), var(--bg-image);
     background-size: cover;
 }
 

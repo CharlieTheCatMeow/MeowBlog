@@ -72,7 +72,7 @@ function Page() {
                 />
                 Sign up
             </label>
-            <button type="submit">Submit</button>
+            <button type="submit" className="text-zinc-900 text-bold text-2xl m-2 px-6 py-2 rounded-full transition-all duration-300 bg-white/5 hover:bg-black/10 hover:text-white hover:scale-101 active:scale-95 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]">Submit</button>
         </form>
     );
 }

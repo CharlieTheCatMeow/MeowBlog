@@ -30,6 +30,12 @@ function Nav() {
         });
     }
 
+    async function handleChangeTheme() {
+        const currentTheme = document.documentElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", newTheme);
+    }
+
     return (
         <nav className="flex items-center justify-start px-2 py-2 gap-2 bg-white/10 backdrop-blur-md border-b border-white/20">
             <Link href="/" className={linkStyles}>Home</Link>
@@ -38,6 +44,13 @@ function Nav() {
                 <Link href="/post" className={linkStyles}>Post</Link>
             )}
             <Link href="/about" className={linkStyles}>About</Link>
+            <button
+                type="button"
+                onClick={() => handleChangeTheme()}
+                title="Click to change theme"
+                className={`${linkStyles} ml-auto cursor-pointer`}
+            >Theme</button>
+
             {!isPending && (
                 session ? (
                     <div className="ml-auto flex items-center gap-2">

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import {deleteBlog, editBlog, likePost, type PostType} from "@/app/post/actions";
+import ReactMarkdowm from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const buttonStyle = "text-zinc-900 font-bold text-2xl m-2 px-6 py-2 rounded-full transition-all duration-300 bg-white/5 hover:bg-black/10 hover:text-white hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] cursor-pointer";
 
@@ -75,10 +77,10 @@ function Post({ post }: { post: PostType }) {
                     <div className="text-zinc-400 font-extralight text-xs">
                         {new Date(post.date).toLocaleDateString()}
                     </div>
-                    <div>
-                        {content.map((paragraph, i) => (
-                            <p key={i} className="text-zinc-300 text-xl">{paragraph}</p>
-                        ))}
+                    <div className="prose prose-invert prose-lg max-w-none">
+                        <ReactMarkdowm remarkPlugins={[remarkGfm]}>
+                            {content.join("\n\n")}
+                        </ReactMarkdowm>
                     </div>
                 </>
             )}

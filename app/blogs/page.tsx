@@ -4,28 +4,53 @@ import Post from "@/lib/PostModel";
 import dbConnect from "@/lib/mongoose";
 import type {PostType} from "@/app/post/actions";
 import PostCard from "@/components/PostCard";
+import SearchBar from "@/components/SearchBar";
 
-async function PostList() {
-    await connection();
+
+function escapeRegex(text: string) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+async function PostList({
+                            searchParams,
+                        }: {
+                            searchParams: Promise<{ q?: string | string[] }>;
+                        }) {
+    const { q } = await searchParams;
+    const query = typeof q === "string" ? q.trim(): "";
     await dbConnect();
-    const allPosts = (await Post.find().sort({date: -1})) as PostType[];
 
+    const filter = query
+        ? {
+            $or: [
+                { title: { $regex: escapeRegex(query), $options: "i" } },
+                { content: { $elemMatch: { $regex: escapeRegex(query), $options: "i" } } },
+            ],
+        }
+        : {};
+
+    const shownPosts = (await Post.find(filter).sort({ date: -1 })) as PostType[];
     return (
         <div>
-            {allPosts.map((post) => (
-                <PostCard key={post.id} post={post}/>
-            ))}
+            <SearchBar defaultValue={query} />
+            {shownPosts.length === 0 ? (
+                <p className="text-zinc-400 m-4">
+                    No blogs found{query ? ` matching "${query}"` : ""}.
+                </p>
+            ) : (
+                shownPosts.map((post) => <PostCard key={post.id} post={post} />)
+            )}
         </div>
     );
 }
-
-export default function Page() {
+export default function Page({ searchParams }: PageProps<"/blogs">) {
     return (
         <div>
             <h1 className="text-zinc-300 font-bold text-5xl m-4">Blogs</h1>
-            <Suspense fallback={<p>Loading posts...</p>}>
-                <PostList/>
+            <Suspense fallback={<p className="m-4 text-zinc-400">Loading posts...</p>}>
+                <PostList searchParams={searchParams} />
             </Suspense>
         </div>
     );
 }
+
