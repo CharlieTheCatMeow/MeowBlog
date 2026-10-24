@@ -28,8 +28,11 @@ export async function postBlog(post: PostType) {
     try {
         await dbConnect();
         await Post.create({ ...post, authorId: user.id });
+        revalidatePath("/blogs");
+        return true;
     } catch (error) {
         console.error("Error: " + error);
+        return false;
     }
 }
 
@@ -64,10 +67,11 @@ export async function deleteBlog(id: string) {
             console.error("No post found with id " + id);
             return false;
         }
-        revalidatePath("/");
+        revalidatePath("/blogs");
         return true;
     } catch (error) {
         console.error("Error: " + error);
+        return false;
     }
 }
 

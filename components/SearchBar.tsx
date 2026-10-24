@@ -8,7 +8,7 @@ export default function SearchBar({ defaultValue = "" }: { defaultValue?: string
                 name="q"
                 defaultValue={defaultValue}
                 placeholder="Search blogs..."
-                className="outline-none w-full max-w-md px-4 py-2 rounded-lg bg-white/10 text-zinc-200 placeholder-zinc-400 border border-white/20 backdrop-blur-md focus:outline.none focus:ring-2 focus:ring-white/40"
+                className="outline-none w-full max-w-md px-4 py-2 rounded-lg bg-white/10 text-zinc-200 placeholder-zinc-400 border border-white/20 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/40"
             />
             <button
                 type="submit"

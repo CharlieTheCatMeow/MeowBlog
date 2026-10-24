@@ -4,7 +4,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import fileToProfilePictureDataUrl from "@/lib/profile_picture";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import {useEffect, useRef} from "react";
 
 const linkStyles = "px-6 py-2 rounded-full text-zinc-200 text-sm transition-all duration-300 bg-white/5 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]";
 
@@ -30,10 +30,18 @@ function Nav() {
         });
     }
 
+    useEffect(() => {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) {
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        }
+    }, []);
+
     async function handleChangeTheme() {
         const currentTheme = document.documentElement.getAttribute("data-theme");
         const newTheme = currentTheme === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
     }
 
     return (

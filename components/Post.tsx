@@ -31,7 +31,14 @@ function Post({ post }: { post: PostType }) {
         }
     }
 
+    function handleCancel() {
+        setTitle(post.title);
+        setContent(post.content);
+        setIsEditing(false);
+    }
+
     async function handleDelete() {
+        if (!confirm("Are you sure you want to delete this post?")) return;
         const ok = await deleteBlog(post.id);
         if (ok) {
             router.push("/blogs");
@@ -59,16 +66,26 @@ function Post({ post }: { post: PostType }) {
                         onChange={(e) => setTitle(e.target.value)}
                     />
                     {content.map((paragraph, i) => (
-                        <textarea
-                            key={i}
-                            className="outline-none text-zinc-300 text-xl p-2 rounded-lg bg-black/10 border border-white/20"
-                            value={paragraph}
-                            onChange={(e) => {
-                                const updatedContent = [...content];
-                                updatedContent[i] = e.target.value;
-                                setContent(updatedContent);
-                            }}
-                        />
+                        <div key={i} className="flex gap-2 items-start">
+                            <textarea
+                                className="flex-1 outline-none text-zinc-300 text-xl p-2 rounded-lg bg-black/10 border border-white/20"
+                                value={paragraph}
+                                onChange={(e) => {
+                                    const updatedContent = [...content];
+                                    updatedContent[i] = e.target.value;
+                                    setContent(updatedContent);
+                                }}
+                            />
+                            {content.length > 1 && (
+                                <button
+                                    type="button"
+                                    onClick={() => setContent(content.filter((_, idx) => idx !== i))}
+                                    className="px-3 py-2 rounded-lg bg-red-500/20 text-red-200 hover:bg-red-500/40"
+                                >
+                                    ✕
+                                </button>
+                            )}
+                        </div>
                     ))}
                 </>
             ) : (
@@ -98,7 +115,7 @@ function Post({ post }: { post: PostType }) {
                             <button className={buttonStyle} onClick={handleEdit}>
                                 Save
                             </button>
-                            <button className={buttonStyle} onClick={() => setIsEditing(false)}>
+                            <button className={buttonStyle} onClick={handleCancel}>
                                 Cancel
                             </button>
                         </>

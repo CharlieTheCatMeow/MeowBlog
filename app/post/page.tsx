@@ -10,7 +10,7 @@ async function PostContent() {
     await connection();
     const auth = await initAuth();
     const session = await auth.api.getSession({headers: await headers()});
-    if (!session) {
+    if (!session || session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         redirect("/");
     }
     return <PostForm postBlog={postBlog}/>;
