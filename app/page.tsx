@@ -15,7 +15,7 @@ async function FeaturedBlogs() {
             .sort({ date: -1 })
             .limit(3)) as PostType[];
     if (featuredPosts.length === 0) {
-        return <p className="text-zinc-400 m-4">No Blogs found D:</p>
+        return <p className="text-foreground/60 m-4">No Blogs found D:</p>
     }
     
     return (
@@ -30,19 +30,19 @@ async function FeaturedBlogs() {
 function Page() {
     return (
         <div className="flex flex-col items-center text-center px-4 py-12 gap-6">
-            <h1 className="text-zinc-200 font-bold text-6xl tracking-tight">MeowBlog</h1>
+            <h1 className="text-foreground/90 font-bold text-6xl tracking-tight">MeowBlog</h1>
             <div className="w-full max-w-md flex justify-center">
                 <SearchBar />
             </div>
 
             <section className="w-full max-w-5xl text-left mt-6">
                 <div className="flex items-center justify-between mx-4 mb-2">
-                    <h2 className="text-zinc-300 font-semibold text-2xl">Recent Blogs</h2>
-                    <Link href={"/blogs"} className="text-sm text-zinc-400 hover:text-zinc-200 transition">
+                    <h2 className="text-foreground/80 font-semibold text-2xl">Recent Blogs</h2>
+                    <Link href={"/blogs"} className="text-sm text-foreground/60 hover:text-foreground transition">
                         View all
                     </Link>
                 </div>
-                <Suspense fallback={<p className="m-4 text-zinc-400">Loading posts...</p>}>
+                <Suspense fallback={<p className="m-4 text-foreground/60">Loading posts...</p>}>
                     <FeaturedBlogs />
                 </Suspense>
             </section>

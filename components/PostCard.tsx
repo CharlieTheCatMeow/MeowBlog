@@ -16,13 +16,13 @@ function PostCard({ post }: {post: PostType}) {
     return (
         <div className="flex-shrink-0">
             <Link href={`/blogs/${post.id}`} className="flex flex-col gap-2 p-4 m-4 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/20 hover:shadow-[0_8px_32px_0_rgba(0, 0, 0, 0.5)] transition-all">
-                <h2 className="text-zinc-300 font-bold text-2xl">{post.title}</h2>
-                <div className="flex items-center gap-3 text-zinc-400 font-extralight text-xs">
-                    <p className="text-zinc-400 font-extralight text-xs">{dateText}</p>
+                <h2 className="text-foreground/90 font-bold text-2xl">{post.title}</h2>
+                <div className="flex items-center gap-3 text-foreground/60 font-extralight text-xs">
+                    <p className="text-foreground/60 font-extralight text-xs">{dateText}</p>
                     <span>♥ {likeCount}</span>
                 </div>
 
-                <p className="text-zinc-300">{preview}</p>
+                <p className="text-foreground/80">{preview}</p>
             </Link>
         </div>
     );
