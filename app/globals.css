@@ -41,10 +41,21 @@ body {
 
     background: linear-gradient(var(--overlay), var(--overlay)), var(--bg-image);
     background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 main {
     max-width: 900px;
     margin: 0 auto;
     padding: 2rem 1rem;
+}
+
+.prose {
+    --tw-prose-body: var(--foreground);
+    --tw-prose-headings: var(--foreground);
+    --tw-prose-bold: var(--foreground);
+    --tw-prose-links: var(--foreground);
+    --tw-prose-code: var(--foreground);
+    --tw-prose-quotes: var(--foreground);
 }

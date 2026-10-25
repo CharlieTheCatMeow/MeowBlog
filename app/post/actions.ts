@@ -17,7 +17,7 @@ export interface PostType {
 async function requireUser() {
     const auth = await initAuth();
     const session = await auth.api.getSession({ headers: await headers() });
-    if (!session || session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    if (!session || session.user.email !== process.env.ADMIN_EMAIL) {
         throw new Error("No.");
     }
     return session.user;
@@ -28,6 +28,7 @@ export async function postBlog(post: PostType) {
     try {
         await dbConnect();
         await Post.create({ ...post, authorId: user.id });
+        revalidatePath("/");
         revalidatePath("/blogs");
         return true;
     } catch (error) {
@@ -49,6 +50,7 @@ export async function editBlog(id: string, updates: Partial<Omit<PostType, "id">
             console.error("No post found with id " + id);
             return false;
         }
+        revalidatePath("/");
         revalidatePath("/blogs");
         revalidatePath(`/blogs/${id}`);
         return true;
@@ -67,6 +69,7 @@ export async function deleteBlog(id: string) {
             console.error("No post found with id " + id);
             return false;
         }
+        revalidatePath("/");
         revalidatePath("/blogs");
         return true;
     } catch (error) {
@@ -97,7 +100,14 @@ export async function likePost(postId: string) {
             : { $addToSet: { likes: userId } }
     );
 
+    revalidatePath("/");
     revalidatePath("/blogs");
     revalidatePath(`/blogs/${postId}`)
     return true;
+}
+
+export async function getIsAdmin() {
+    const auth = await initAuth();
+    const session = await auth.api.getSession({ headers: await headers() });
+    return Boolean(session && session.user.email === process.env.ADMIN_EMAIL);
 }

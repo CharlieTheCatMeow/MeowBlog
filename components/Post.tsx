@@ -1,18 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import {deleteBlog, editBlog, likePost, type PostType} from "@/app/post/actions";
+import { deleteBlog, editBlog, getIsAdmin, likePost, type PostType } from "@/app/post/actions";
 import ReactMarkdowm from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const buttonStyle = "text-zinc-900 font-bold text-2xl m-2 px-6 py-2 rounded-full transition-all duration-300 bg-white/5 hover:bg-black/10 hover:text-white hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] cursor-pointer";
+
+const buttonStyle = "text-foreground/90 font-bold text-2xl m-2 px-6 py-2 rounded-full transition-all duration-300 bg-white/5 hover:bg-black/10 hover:text-foreground hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] cursor-pointer disabled:opacity-50";
 
 function Post({ post }: { post: PostType }) {
     const { data: session } = authClient.useSession();
     const router = useRouter();
-    const isAdmin = session?.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        if (session) {
+            getIsAdmin().then(setIsAdmin);
+        }
+    }, [session]);
 
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(post.title);
@@ -61,14 +68,14 @@ function Post({ post }: { post: PostType }) {
             {isEditing ? (
                 <>
                     <input
-                        className="outline-none text-zinc-300 font-bold text-5xl p-2 rounded-lg bg-black/10 border border-white/20"
+                        className="outline-none text-foreground/90 font-bold text-5xl p-2 rounded-lg bg-black/10 border border-white/20"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
                     {content.map((paragraph, i) => (
                         <div key={i} className="flex gap-2 items-start">
                             <textarea
-                                className="flex-1 outline-none text-zinc-300 text-xl p-2 rounded-lg bg-black/10 border border-white/20"
+                                className="flex-1 outline-none text-foreground/90 text-xl p-2 rounded-lg bg-black/10 border border-white/20"
                                 value={paragraph}
                                 onChange={(e) => {
                                     const updatedContent = [...content];
@@ -87,14 +94,21 @@ function Post({ post }: { post: PostType }) {
                             )}
                         </div>
                     ))}
+                    <button
+                        type="button"
+                        onClick={() => setContent([...content, ""])}
+                        className={buttonStyle}
+                    >
+                        Add paragraph
+                    </button>
                 </>
             ) : (
                 <>
-                    <h1 className="text-zinc-300 font-bold text-5xl">{title}</h1>
-                    <div className="text-zinc-400 font-extralight text-xs">
+                    <h1 className="text-foreground/90 font-bold text-5xl">{title}</h1>
+                    <div className="text-foreground/60 font-extralight text-xs">
                         {new Date(post.date).toLocaleDateString()}
                     </div>
-                    <div className="prose prose-invert prose-lg max-w-none">
+                    <div className="prose prose-lg max-w-none [--tw-prose-body:var(--foreground)] [--tw-prose-headings:var(--foreground)] [--tw-prose-bold:var(--foreground)] [--tw-prose-links:var(--foreground)] [--tw-prose-code:var(--foreground)] [--tw-prose-quotes:var(--foreground)]">
                         <ReactMarkdowm remarkPlugins={[remarkGfm]}>
                             {content.join("\n\n")}
                         </ReactMarkdowm>
@@ -109,7 +123,7 @@ function Post({ post }: { post: PostType }) {
                 >
                     ♥ {likes.length}
                 </button>
-                {isAdmin && (
+                {session && isAdmin && (
                     isEditing ? (
                         <>
                             <button className={buttonStyle} onClick={handleEdit}>

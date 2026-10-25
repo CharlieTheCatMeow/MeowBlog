@@ -26,7 +26,7 @@ async function BlogPost({params}: { params: Promise<{ id: string }> }) {
 
 export default function Page({params}: { params: Promise<{ id: string }> }) {
     return (
-        <Suspense fallback={<p className="m-4 text-zinc-300">Loading post...</p>}>
+        <Suspense fallback={<p className="m-4 text-foreground/60">Loading post...</p>}>
             <BlogPost params={params} />
         </Suspense>
     )

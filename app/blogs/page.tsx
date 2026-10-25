@@ -34,7 +34,7 @@ async function PostList({
         <div>
             <SearchBar defaultValue={query} />
             {shownPosts.length === 0 ? (
-                <p className="text-zinc-400 m-4">
+                <p className="text-foreground/60 m-4">
                     No blogs found{query ? ` matching "${query}"` : ""}.
                 </p>
             ) : (
@@ -46,8 +46,8 @@ async function PostList({
 export default function Page({ searchParams }: PageProps<"/blogs">) {
     return (
         <div>
-            <h1 className="text-zinc-300 font-bold text-5xl m-4">Blogs</h1>
-            <Suspense fallback={<p className="m-4 text-zinc-400">Loading posts...</p>}>
+            <h1 className="text-foreground/90 font-bold text-5xl m-4">Blogs</h1>
+            <Suspense fallback={<p className="m-4 text-foreground/60">Loading posts...</p>}>
                 <PostList searchParams={searchParams} />
             </Suspense>
         </div>

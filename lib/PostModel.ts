@@ -22,6 +22,10 @@ const PostSchema = new Schema(
         likes: {
             type: [String],
             default: [],
+        },
+        authorId: {
+            type: String,
+            required: false,
         }
     },
     { timestamps: true }
