@@ -15,7 +15,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: "MeowBlog",
-    description: "Blog meow",
+    description: "Blog meow I guess",
+    icons: {
+        icon: "/Favicon.svg",
+    }
 };
 
 export default function RootLayout({children}: LayoutProps<"/">) {

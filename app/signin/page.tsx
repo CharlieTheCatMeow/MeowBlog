@@ -86,9 +86,9 @@ function Page() {
             <button
                 type="button"
                 onClick={() => setUser({ ...user, signUp: !user.signUp })}
-                className="text-sm text-foreground/70 hover:text-foreground underline self-center cursor-pointer"
+                className="text-foreground/90 font-bold text-2xl m-2 px-6 py-2 rounded-full transition-all duration-300 bg-white/5 hover:bg-black/10 hover:text-foreground hover:scale-101 active:scale-95 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] cursor-pointer disabled:opacity-50"
             >
-                {user.signUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+                {user.signUp ? "Sign in instead" : "Sign up instead"}
             </button>
             <button
                 type="submit"

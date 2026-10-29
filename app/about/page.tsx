@@ -8,7 +8,13 @@ function Page() {
                 Hi everyone. This is the about page. You can find things about this project here.
             </p>
             <p className="text-foreground/80 text-lg">
-                I lied. You actually cannot.
+                This site is built using next.js, react, tailwind CSS and typescript. (i hope I did not forget
+                anything). <br/>
+                It also uses betterAuth and MongoDB for some login and database stuff. <br/>
+                Yeah idk that is it. <br/>
+                You can post blogs, edit them, delete them and like them. <br/>
+                To post blogs, sign in as test@example.com with the password password123. <br/>
+                Also try changing the profile picture by clicking the profile picture in the top right corner. (Do not use anything weird or NSFW and stuff please)<br/>
             </p>
         </div>
     );
