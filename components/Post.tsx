@@ -29,7 +29,13 @@ function Post({ post }: { post: PostType }) {
     const hasLiked = session ? likes.includes(session.user.id) : false;
 
     async function handleEdit() {
-        const ok = await editBlog(post.id, { title, content });
+        const trimmedTitle = title.trim();
+        const cleanedContent = content.map((p) => p.trim()).filter(Boolean);
+        if (!trimmedTitle || cleanedContent.length === 0) {
+            alert("Title and content cannot be empty");
+            return;
+        }
+        const ok = await editBlog(post.id, { title: trimmedTitle, content: cleanedContent });
         if (ok) {
             setIsEditing(false);
             router.refresh();
@@ -54,13 +60,20 @@ function Post({ post }: { post: PostType }) {
         }
     }
 
+    const [isLiking, setIsLiking] = useState(false);
     async function handleLike() {
         if (!session) {
             router.push("/signin");
             return;
         }
-        await likePost(post.id);
-        router.refresh();
+        if (isLiking) return;
+        setIsLiking(true);
+        try {
+            await likePost(post.id);
+            router.refresh();
+        } finally {
+            setIsLiking(false);
+        }
     }
 
     return (
@@ -104,13 +117,13 @@ function Post({ post }: { post: PostType }) {
                 </>
             ) : (
                 <>
-                    <h1 className="text-foreground/90 font-bold text-5xl">{title}</h1>
+                    <h1 className="text-foreground/90 font-bold text-5xl">{post.title}</h1>
                     <div className="text-foreground/60 font-extralight text-xs">
                         {new Date(post.date).toLocaleDateString()}
                     </div>
-                    <div className="prose prose-lg max-w-none [--tw-prose-body:var(--foreground)] [--tw-prose-headings:var(--foreground)] [--tw-prose-bold:var(--foreground)] [--tw-prose-links:var(--foreground)] [--tw-prose-code:var(--foreground)] [--tw-prose-quotes:var(--foreground)]">
+                    <div className="prose prose-lg max-w-none">
                         <ReactMarkdowm remarkPlugins={[remarkGfm]}>
-                            {content.join("\n\n")}
+                            {post.content.join("\n\n")}
                         </ReactMarkdowm>
                     </div>
                 </>
@@ -118,6 +131,7 @@ function Post({ post }: { post: PostType }) {
 
             <div className="flex flex-row gap-2 mt-auto self-start">
                 <button
+                    disabled={isLiking}
                     onClick={handleLike}
                     className={`${buttonStyle} ${hasLiked ? "text-pink-400 border-pink-400/40" : ""}`}
                 >
@@ -135,7 +149,12 @@ function Post({ post }: { post: PostType }) {
                         </>
                     ) : (
                         <>
-                            <button className={buttonStyle} onClick={() => setIsEditing(true)}>
+                            <button className={buttonStyle} onClick={() => {
+                                setTitle(post.title);
+                                setContent(post.content);
+                                setIsEditing(true);
+                                }}
+                            >
                                 Edit
                             </button>
                             <button className={buttonStyle} onClick={handleDelete}>

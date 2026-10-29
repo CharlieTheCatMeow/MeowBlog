@@ -69,13 +69,16 @@ function Page() {
             />
             {user.signUp && (
                 <input className={input_styling}
+                    type="text"
                     placeholder="Name"
+                    required
                     value={user.name}
                     onChange={(e) => setUser({...user, name: e.target.value})}
                 />
             )}
             <input className={input_styling}
                 type="password"
+                required
                 placeholder="Password"
                 value={user.password}
                 onChange={(e) => setUser({...user, password: e.target.value})}

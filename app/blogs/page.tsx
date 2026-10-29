@@ -1,5 +1,4 @@
 import {Suspense} from "react";
-import {connection} from "next/server";
 import Post from "@/lib/PostModel";
 import dbConnect from "@/lib/mongoose";
 import type {PostType} from "@/app/post/actions";

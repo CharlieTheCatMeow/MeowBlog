@@ -37,19 +37,21 @@ export async function postBlog(post: PostType) {
     }
 }
 
-export async function editBlog(id: string, updates: Partial<Omit<PostType, "id">>) {
+export async function editBlog(id: string, updates: Pick<PostType, "title" | "content">) {
     await requireUser();
+    const title = updates.title.trim();
+    const content = updates.content.map((p) => p.trim()).filter(Boolean);
+    if (!title || content.length === 0) {
+        return false;
+    }
     try {
         await dbConnect();
         const updated = await Post.findOneAndUpdate(
             { id },
-            { $set: updates },
+            { $set: { title, content } },
             { new: true }
         );
-        if (!updated) {
-            console.error("No post found with id " + id);
-            return false;
-        }
+        if (!updated) return false;
         revalidatePath("/");
         revalidatePath("/blogs");
         revalidatePath(`/blogs/${id}`);
